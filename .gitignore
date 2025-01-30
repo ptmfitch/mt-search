@@ -1,0 +1,7 @@
+.env
+__pycache__
+.DS_Store
+_secrets.py
+sample.json
+search_index.json
+mlocust-app
