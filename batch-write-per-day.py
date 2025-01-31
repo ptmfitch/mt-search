@@ -12,7 +12,7 @@ BATCH_SIZE = 10000
 
 ACCOUNT_TX_PER_DAY = 100000
 
-BATCH_COUNT = ACCOUNT_TX_PER_DAY / BATCH_SIZE
+BATCH_COUNT = int(ACCOUNT_TX_PER_DAY / BATCH_SIZE)
 
 # How many days to simulate (start = today - TEST_DAYS, end = today)
 TEST_DAYS = 365
