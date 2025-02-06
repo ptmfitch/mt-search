@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 
 # How long to run the test for
-TEST_DURATION_MINUTES = 5
+TEST_DURATION_SECONDS = 140
+TEST_DURATION_MINUTES = TEST_DURATION_SECONDS / 60
 
 # Compression level over the wire, from -1 (least) to 9 (most)
 COMPRESSION_LEVEL = 9
@@ -14,7 +15,7 @@ COMPRESSION_LEVEL = 9
 BATCH_SIZE = 10000
 
 # How many accounts to simulate
-TEST_ACCOUNTS = 200
+TEST_ACCOUNTS = 17
 
 # How many days to simulate (start = today - TEST_DAYS, end = today)
 TEST_DAYS = 270
@@ -33,7 +34,7 @@ insert_count = 0
 
 start_time = datetime.now()
 print("{}: Starting test (will run for {} minute(s))".format(start_time, TEST_DURATION_MINUTES))
-while start_time > datetime.now() - timedelta(minutes=TEST_DURATION_MINUTES):
+while start_time > datetime.now() - timedelta(seconds=TEST_DURATION_MINUTES*60):
     transactions = []
     for account in accounts:
         for _ in range(ACCOUNT_TX_PER_DAY):
