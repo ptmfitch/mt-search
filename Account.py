@@ -63,7 +63,7 @@ class Account:
         random_datetime = random_date_in_range(datetime.now() - timedelta(days=self.days), datetime.now())
         random_date = datetime(random_datetime.year, random_datetime.month, random_datetime.day)
         return {
-            "AccEntrStsFlg": random_string(10),
+            "AccEntStsFlg": random_string(10),
             "Acc": {
                 "Nm": self.name,
                 "No": self.number,
@@ -71,9 +71,9 @@ class Account:
             },
             "Amt": random() * 99999,
             "BnkId": random_string(10),
-            "BnkRf": "BankRef" + random_string(3, digits),
+            "BnkRf": "BnkRf" + random_string(3, digits),
             "Ccy": choice(self.currencies),
-            "ChqNo": "CheqNum" + random_string(16, digits),
+            "ChqNo": "ChqNo" + random_string(16, digits),
             "ChqPmtInfId": random_string(10),
             "Cld": {
                 "FteDt": random_datetime,
@@ -85,10 +85,10 @@ class Account:
                 "SrtCd": random_string(10),
                 "Nm": random_string(3, ascii_uppercase) + "ACCNM"
             },
-            "CstRf": "CustRef" + random_string(27, digits + ascii_lowercase),
+            "CstRf": "CstRf" + random_string(27, digits + ascii_lowercase),
             "DCI": choice(['C', 'D']),
             "EntCrtdDtTm": random_datetime,
-            "EntrDt": random_date,
+            "EntDt": random_date,
             "Ibn": random_string(2, ascii_uppercase) + "IBN",
             "InpDt": random_datetime,
             "InpTm": random_string(10),
@@ -100,12 +100,12 @@ class Account:
                 "L3": random_string(10),
                 "L4": random_string(10)
             },
-            "NoTx": random() * 99999,
+            "NTx": random() * 99999,
             "OfsAccHTg": random_string(10),
             "PtyTp": random_string(10),
             "Rsn": random_string(10),
             "ScIdr": choice(['BCBS', 'USCB', 'UKBA']),
-            "ScSysTrnRf": random_string(10),
+            "ScSysTxRf": random_string(10),
             "TrnCd9": random_string(10),
             "TxDts": random_string(10),
             "TxEntDt": random_date,

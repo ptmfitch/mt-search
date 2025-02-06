@@ -20,10 +20,10 @@ test_database.drop_collection(col_name)
 
 print("Creating new collection")
 
-print("Sharding collection")
-collection.create_index({"Acc.No": 1, "EntrDt": 1})
-admin_database.command("enableSharding", db_name)
-admin_database.command("shardCollection", namespace, key={"Acc.No": 1, "EntrDt": 1})
+# print("Sharding collection")
+# collection.create_index({"Acc.No": 1, "EntrDt": 1})
+# admin_database.command("enableSharding", db_name)
+# admin_database.command("shardCollection", namespace, key={"Acc.No": 1, "EntrDt": 1})
 
 print("Creating search index")
 collection.create_search_index({"definition": { "mappings": {
@@ -45,7 +45,7 @@ collection.create_search_index({"definition": { "mappings": {
         "ChqNo": {  "type": "token" },
         "CstRf": { "type": "string" },
         "DCI": { "type": "token" },
-        "EntrDt": { "type": "date" },
+        "EntDt": { "type": "date" },
         "Ibn": { "type": "string" },
         "TxEntDt": { "type": "date" },
         "TxTp": [{

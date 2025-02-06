@@ -4,4 +4,4 @@ __pycache__
 _secrets.py
 sample.json
 search_index.json
-mlocust-app
+mlocust-app/*

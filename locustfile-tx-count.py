@@ -99,16 +99,27 @@ class MetricsLocust(User):
         return int(random() * (max - min) + min)
 
 
+    ACCOUNT_NUMBER = "Acc.No"
+    ENTERED_DATE = "EntDt"
+
     def account_no_in(self, accounts):
         return {
             'in': {
-                'path': 'Acc.No',
+                'path': self.ACCOUNT_NUMBER,
                 'value': accounts
             }
         }
 
 
-    def date_range(self, start, end, path="EntrDt"):
+    def account_no_eq(self, account):
+        return {
+            'eq': {
+                'path': self.ACCOUNT_NUMBER,
+                'value': account
+            }
+        }
+
+    def date_range(self, start, end, path=ENTERED_DATE):
         return {
             'range': {
                 'path': path,
@@ -118,7 +129,7 @@ class MetricsLocust(User):
         }
 
 
-    def date_range_days_from_today(self, days, path="EntrDt"):
+    def date_range_days_from_today(self, days, path=ENTERED_DATE):
         return self.date_range(
             datetime.now() - timedelta(days=days),
             datetime.now(),
@@ -136,7 +147,7 @@ class MetricsLocust(User):
 
 
     def default_sort(self):
-        return self.sort("EntrDt", -1)
+        return self.sort(self.ENTERED_DATE, -1)
 
 
     def skip_to_page(self, page=1, size=200):
@@ -152,7 +163,7 @@ class MetricsLocust(User):
         return n
 
 
-    def skip_to_random_page(self, size=200):
+    def skip_to_random_page(self):
         return self.skip_to_page(self.random_decay())
 
 
@@ -161,20 +172,11 @@ class MetricsLocust(User):
 
 
     account_nos_60k = [
-            '009369947890',
-            '878444052710',
-            '853910386650',
-            '128104018782',
-            '630270887635'
-        ]
+
+    ]
 
     date_ranges_60k = [
-        ['2024-02-01', '2024-03-31'],
-        ['2024-04-01', '2024-05-31'],
-        ['2024-06-01', '2024-07-31'],
-        ['2024-08-01', '2024-09-30'],
-        ['2024-10-01', '2024-11-30'],
-        ['2024-12-01', '2025-01-31']
+
     ]
 
 
@@ -241,10 +243,10 @@ class MetricsLocust(User):
 
 
     sort_fields = [
-        'Acc.No',
+        ACCOUNT_NUMBER,
         'CstRf',
         'TxTp',
-        'EntrDt',
+        ENTERED_DATE,
         'TxEntDt',
         'Amt',
         'Ccy',
