@@ -67,7 +67,7 @@ class Account:
             "Acc": {
                 "Nm": self.name,
                 "No": self.number,
-                "Tp": self.type,
+                "Tp": self.type[0],
             },
             "Amt": random() * 99999,
             "BnkId": random_string(10),
