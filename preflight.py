@@ -19,6 +19,7 @@ except:
 test_database.drop_collection(col_name)
 
 print("Creating new collection")
+test_database.create_collection(col_name)
 
 # print("Sharding collection")
 # collection.create_index({"Acc.No": 1, "EntrDt": 1})

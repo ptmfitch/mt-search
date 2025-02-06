@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 
 # How long to run the test for
-TEST_DURATION_MINUTES = 120
+TEST_DURATION_MINUTES = 5
 
 # Compression level over the wire, from -1 (least) to 9 (most)
 COMPRESSION_LEVEL = 9
