@@ -22,9 +22,9 @@ print("Creating new collection")
 test_database.create_collection(col_name)
 
 # print("Sharding collection")
-# collection.create_index({"Acc.No": 1, "EntrDt": 1})
+collection.create_index({"Acc.No": 1, "EntDt": 1})
 # admin_database.command("enableSharding", db_name)
-# admin_database.command("shardCollection", namespace, key={"Acc.No": 1, "EntrDt": 1})
+# admin_database.command("shardCollection", namespace, key={"Acc.No": 1, "EntDt": 1})
 
 print("Creating search index")
 collection.create_search_index({"definition": { "mappings": {

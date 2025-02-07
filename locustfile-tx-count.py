@@ -113,7 +113,7 @@ class MetricsLocust(User):
 
     def account_no_eq(self, account):
         return {
-            'eq': {
+            'equals': {
                 'path': self.ACCOUNT_NUMBER,
                 'value': account
             }
@@ -172,26 +172,55 @@ class MetricsLocust(User):
 
 
     account_nos_60k = [
-
-    ]
-
-    date_ranges_60k = [
-
+        "110443519261",
+        "397830443549",
+        "799517638469",
+        "438668948350",
+        "754155843325",
+        "167312313354",
+        "545063539177",
+        "526603697837",
+        "033546218271",
+        "142159486319",
+        "547266229604",
+        "579678098809",
+        "377322831568",
+        "081857526056",
+        "172786528755",
+        "211378559137",
+        "155266997934",
+        "976722699493",
+        "687666868530",
+        "623024311992"
     ]
 
 
     def search_60000_transactions(self):
-        account_no = choice(self.account_nos_60k)
-        date_range = choice(self.date_ranges_60k)
-        min_date = datetime.strptime(date_range[0], '%Y-%m-%d')
-        max_date = datetime.strptime(date_range[1], '%Y-%m-%d')
+        account_nos = choices(self.account_nos_60k, k=9)
 
         return { '$search': {
             'index': 'default',
             'compound': {
                 'filter': [
-                    self.account_no_in([account_no]),
-                    self.date_range(min_date, max_date)
+                    self.account_no_in(account_nos),
+                    self.date_range(datetime.now() - timedelta(days=30), datetime.now())
+                ]
+            },
+            'sort': self.default_sort(),
+            # 'sort': self.default_sort() if random() < 0.5 else self.random_sort(),
+            'concurrent': True
+        } }
+
+
+    def search_100000_transactions(self):
+        account_nos = choices(self.account_nos_60k, k=9)
+
+        return { '$search': {
+            'index': 'default',
+            'compound': {
+                'filter': [
+                    self.account_no_in(account_nos),
+                    self.date_range(datetime.now() - timedelta(days=50), datetime.now())
                 ]
             },
             'sort': self.default_sort(),
@@ -201,17 +230,40 @@ class MetricsLocust(User):
 
 
     def quick_search_60000_transactions(self):
-        account_no = choice(self.account_nos_60k)
-        date_range = choice(self.date_ranges_60k)
-        min_date = datetime.strptime(date_range[0], '%Y-%m-%d')
-        max_date = datetime.strptime(date_range[1], '%Y-%m-%d')
+        account_nos = choices(self.account_nos_60k, k=9)
 
         return { '$search': {
             'index': 'default',
             'compound': {
                 'filter': [
-                    self.account_no_in([account_no]),
-                    self.date_range(min_date, max_date)
+                    self.account_no_in(account_nos),
+                    self.date_range(datetime.now() - timedelta(days=30), datetime.now())
+                ],
+                'must': [
+                    {
+                        'regex': {
+                            'query': self.random_regex(),
+                            'path': { 'wildcard': '*' },
+                            'allowAnalyzedField': True
+                        }
+                    }
+                ]
+            },
+            'sort': self.default_sort(),
+            # 'sort': self.default_sort() if random() < 0.5 else self.random_sort(),
+            'concurrent': True
+        } }
+
+
+    def quick_search_100000_transactions(self):
+        account_nos = choices(self.account_nos_60k, k=9)
+
+        return { '$search': {
+            'index': 'default',
+            'compound': {
+                'filter': [
+                    self.account_no_in(account_nos),
+                    self.date_range(datetime.now() - timedelta(days=50), datetime.now())
                 ],
                 'must': [
                     {
@@ -278,17 +330,17 @@ class MetricsLocust(User):
     ################################################################
 
 
-    @task(1)
-    def _async_60000_filter_search(self):
+    @task(0)
+    def _async_100000_filter_search(self):
         # Note that you don't pass in self despite the signature above
         tic = self.get_time();
-        name = "60000TransactionsFilter";
+        name = "100000TransactionsFilter";
 
         try:
             # Get the record from the target collection now
             self.coll.aggregate([
-                self.search_60000_transactions(),
-                # self.skip_to_random_page(),
+                self.search_100000_transactions(),
+                # self.skip_to_page(10),
                 self.limit_page()
             ])
             events.request.fire(request_type="mlocust", name=name, response_time=(self.get_time()-tic)*1000, response_length=0)
@@ -297,16 +349,34 @@ class MetricsLocust(User):
             # Add a sleep so we don't overload the system with exceptions
             time.sleep(5)
 
-    @task(1)
-    def _async_60000_quick_search(self):
+    @task(5)
+    def _async_100000_filter_database(self):
         # Note that you don't pass in self despite the signature above
         tic = self.get_time();
-        name = "60000TransactionsQuick";
+        name = "100000TransactionsDatabase";
+
+        try:
+            # Get the record from the target collection now
+            self.coll.find({
+                self.ACCOUNT_NUMBER: { '$in': choices(self.account_nos_60k, k=9) },
+                self.ENTERED_DATE: { '$gt': datetime.now() - timedelta(days=50) }
+            }).sort({self.ENTERED_DATE: -1}).limit(200)
+            events.request.fire(request_type="mlocust", name=name, response_time=(self.get_time()-tic)*1000, response_length=0)
+        except Exception as e:
+            events.request.fire(request_type="mlocust", name=name, response_time=(self.get_time()-tic)*1000, response_length=0, exception=e)
+            # Add a sleep so we don't overload the system with exceptions
+            time.sleep(5)
+
+    @task(5)
+    def _async_100000_quick_search(self):
+        # Note that you don't pass in self despite the signature above
+        tic = self.get_time();
+        name = "100000TransactionsQuick";
 
         try:
             # Get the record from the target collection now
             self.coll.aggregate([
-                self.quick_search_60000_transactions(),
+                self.quick_search_100000_transactions(),
                 # self.skip_to_random_page(),
                 self.limit_page()
             ])
