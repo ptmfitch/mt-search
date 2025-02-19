@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 
 # How long to run the test for
-TEST_DURATION_SECONDS = 140
+TEST_DURATION_SECONDS = 10800
 TEST_DURATION_MINUTES = TEST_DURATION_SECONDS / 60
 
 # Compression level over the wire, from -1 (least) to 9 (most)
@@ -15,7 +15,7 @@ COMPRESSION_LEVEL = 9
 BATCH_SIZE = 10000
 
 # How many accounts to simulate
-TEST_ACCOUNTS = 17
+TEST_ACCOUNTS = 200
 
 # How many days to simulate (start = today - TEST_DAYS, end = today)
 TEST_DAYS = 270
