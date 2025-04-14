@@ -1,0 +1,46 @@
+[
+  {
+    $search:
+      /**
+       * index: The name of the Search index.
+       * text: Analyzed search, with required fields of query and path, the analyzed field(s) to search.
+       * compound: Combines ops.
+       * span: Find in text field regions.
+       * exists: Test for presence of a field.
+       * near: Find near number or date.
+       * range: Find in numeric or date range.
+       */
+      {
+        index: "default",
+        compound: {
+          filter: [
+            {
+              range: {
+                path: "EntDt",
+                gt: new Date("2025-01-01"),
+                lt: new Date("2025-05-01")
+              }
+            },
+            {
+              in: {
+                path: "Acc.No",
+                value: ["942380199936"]
+              }
+            }
+          ]
+        },
+        sort: {
+          Ccy: 1,
+          EntDt: 1
+        },
+        concurrent: true
+      }
+  },
+  {
+    $limit:
+      /**
+       * Provide the number of documents to limit.
+       */
+      200
+  }
+]
